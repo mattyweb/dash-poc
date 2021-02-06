@@ -1,0 +1,29 @@
+body {
+    color: #ECECEC;
+    background-color: #0F181F;
+    font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif;
+    font-size: 11pt;
+    font-weight: 300;
+}
+.js-plotly-plot .plotly div {
+    font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif;
+}
+.dash-dropdown {
+    margin: 20pt;
+    color: #0F181F;
+}
+.dash-graph {
+    color: #ECECEC;
+}
+.dashLinks a {
+    color: white;
+    padding: 5px;
+}
+.labelDiv {
+    padding: 5px;    
+}
+.halfGraph {
+    display: 'inline-block';
+    width: 49%;
+    float: left;
+}
