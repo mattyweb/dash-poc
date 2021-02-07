@@ -5,6 +5,12 @@ body {
     font-size: 11pt;
     font-weight: 300;
 }
+h1 {
+    font-size: 1.8em;
+    font-weight: 300;
+    text-align: center;
+}
+
 .js-plotly-plot .plotly div {
     font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif;
 }
@@ -19,8 +25,28 @@ body {
     color: white;
     padding: 5px;
 }
-.labelDiv {
-    padding: 5px;    
+.row {
+    clear: both;
+    float: none;
+    min-height: 80pt;
+    display: block;
+}
+.dataLabel {
+    padding: 10px;
+    margin: 20px;
+    width: 15%;
+    height: auto;
+    text-align: center;
+    border: #666666 1px solid;
+    float: left;
+}
+.dataLabel h2 {
+    font-size: 2em;
+    margin-bottom: 3pt;
+    margin-top: 3pt;
+}
+.dataLabel label {
+    color: #999999;
 }
 .halfGraph {
     display: 'inline-block';
