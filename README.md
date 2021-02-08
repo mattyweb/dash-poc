@@ -36,3 +36,7 @@ There are many benefits described above but they come with some new challenges. 
 - Need to figure out how the client is aware of what reports are available
 - Need to see how closely the UI can match the designs and what UX may need to be adjusted
 - Need to see if we need to include some caching or other performance enhancements in the Dash container
+
+<!--
+aws lightsail push-container-image --region us-east-1 --service-name dash-reporting --label dash-poc --image la311data/dash-poc --profile 311user
+>

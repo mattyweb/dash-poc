@@ -37,7 +37,6 @@ def display_page(pathname):
     last_part = re.search("([\w]*)$", pathname)
     dash_mod = last_part.group(1)
     if dash_mod in available_dashboards:
-        print(f"running {dash_mod} dashboard")
         module = importlib.import_module(f"dashboards.{dash_mod}")
         return module.layout
     elif dash_mod == 'dashboards':

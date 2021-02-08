@@ -10,10 +10,6 @@ h1 {
     font-weight: 300;
     text-align: center;
 }
-
-.js-plotly-plot .plotly div {
-    font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif;
-}
 .dash-dropdown {
     margin: 20pt;
     color: #0F181F;
@@ -34,10 +30,10 @@ h1 {
 .dataLabel {
     padding: 10px;
     margin: 20px;
-    width: 15%;
-    height: auto;
+    min-width: 15%;
     text-align: center;
     border: #666666 1px solid;
+    border-radius: 3pt;
     float: left;
 }
 .dataLabel h2 {
@@ -50,6 +46,6 @@ h1 {
 }
 .halfGraph {
     display: 'inline-block';
-    width: 49%;
+    width: 50%;
     float: left;
 }

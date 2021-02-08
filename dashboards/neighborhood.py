@@ -3,12 +3,18 @@ import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+from design import DISCRETE_COLORS, LABELS, apply_figure_style
 from app import app
 
 
+# TITLE
+title = "NEIGHBORHOODS"
+
+# DATA
 df = pd.read_json('https://dev-api.311-data.org/reports?field=type_name&field=council_name&field=created_date')
 
 fig = px.line()
+apply_figure_style(fig)
 
 def populate_options():
     values = []
@@ -36,45 +42,19 @@ def update_figure(selected_council):
     fig = px.line(merged_df,
                   x="created_date", 
                   y=['counts', 'nc_avg'],
-                  labels={
-                    "created_date": "Date Reported",
-                    "council_name": "Neighborhood",
-                    "type_name": "Request Type",
-                    "counts": "Total Requests",
-                    "nc_avg": "Neighborhood Average"
-                  },
+                  color_discrete_sequence=DISCRETE_COLORS,
+                  labels=LABELS,
                   title="Comparison trend for " + selected_council)
-    
-    fig.update_layout(
-        paper_bgcolor='#0F181F',
-        plot_bgcolor='#29404F',
-        title_x=0.5,
-        title_yanchor='top',
-        font_family="Roboto, Arial",
-        font_color="#ECECEC",
-    )
 
     fig.update_xaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='#1A2832',
-        tickmode = 'linear',
-        ticks="outside",
         tickformat="%a\n%m/%d",
-    #    tickangle=-45
-        )
-
-    fig.update_yaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='#1A2832',
-        ticks="outside",
-        tickformat=","
-        )
+    )
 
     fig.update_traces(
         mode='markers+lines'
-        )  # add markers to lines
+    )  # add markers to lines
+
+    apply_figure_style(fig)
 
     return fig
 
@@ -92,49 +72,25 @@ def update_figure(selected_council):
                   x="created_date", 
                   y="counts",
                   color="type_name",
-                  labels={
-                    "created_date": "Date Reported",
-                    "council_name": "Neighborhood",
-                    "type_name": "Request Type",
-                    "counts": "Total Requests"
-                  },
+                  color_discrete_sequence=DISCRETE_COLORS,
+                  labels=LABELS,
                   title="Request type trend for " + selected_council)
-    
-    fig.update_layout(
-        paper_bgcolor='#0F181F',
-        plot_bgcolor='#29404F',
-        title_x=0.5,
-        title_yanchor='top',
-        font_family="Roboto, Arial",
-        font_color="#ECECEC",
-    )
 
     fig.update_xaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='#1A2832',
-        tickmode = 'linear',
-        ticks="outside",
         tickformat="%a\n%m/%d",
-    #    tickangle=-45
-        )
-
-    fig.update_yaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='#1A2832',
-        ticks="outside",
-        tickformat=","
         )
 
     fig.update_traces(
         mode='markers+lines'
         )  # add markers to lines
 
+    apply_figure_style(fig)
+
     return fig
 
 
 layout = html.Div([
+    html.H1(title),
     dcc.Dropdown(
         id='council_list', 
         clearable=False,
