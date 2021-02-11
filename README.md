@@ -39,4 +39,5 @@ There are many benefits described above but they come with some new challenges. 
 
 <!--
 aws lightsail push-container-image --region us-east-1 --service-name dash-reporting --label dash-poc --image la311data/dash-poc --profile 311user
+lsof -ti:5500 | xargs kill
 >
