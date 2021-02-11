@@ -38,6 +38,7 @@ There are many benefits described above but they come with some new challenges. 
 - Need to see if we need to include some caching or other performance enhancements in the Dash container
 
 <!--
+docker build -t la311data/dash-poc .
 aws lightsail push-container-image --region us-east-1 --service-name dash-reporting --label dash-poc --image la311data/dash-poc --profile 311user
 lsof -ti:5500 | xargs kill
 >
