@@ -9,6 +9,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
+from config import PRELOAD, DASH_FILES
 
 
 server = app.server
@@ -16,8 +17,7 @@ logger = logging.getLogger("gunicorn.error")
 available_dashboards = []
 
 
-# find and import files from /dashboards as modules
-files = glob.glob("dashboards/*.py")
+files = glob.glob(f"{DASH_FILES}/*.py")
 files.remove('dashboards/__init__.py')
 
 for file in files:
@@ -25,19 +25,12 @@ for file in files:
     dash_mod = file.group(1)
     available_dashboards.append(dash_mod)
 
-logger.log(logging.INFO, f"Installing dashboards: { ', '.join(available_dashboards) }")
 
-for i in available_dashboards:
-    module = importlib.import_module(f"dashboards.{i}")
+if PRELOAD:
+    logger.log(logging.INFO, f"Installing dashboards: { ', '.join(available_dashboards) }")
 
-logger.log(logging.INFO, f"Report Server ready")
-
-
-# set up default layout
-app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),
-    html.Div(id='page-content')
-])
+    for i in available_dashboards:
+        module = importlib.import_module(f"{DASH_FILES}.{i}")
 
 
 # callback to handle requests
@@ -50,7 +43,7 @@ def display_page(pathname):
     # run the dashboard
     if last_part in available_dashboards:
         logger.log(logging.INFO, f"Running dashboard: {last_part}")
-        module = importlib.import_module(f"dashboards.{last_part}")
+        module = importlib.import_module(f"{DASH_FILES}.{last_part}")
         return module.layout
     
     # terminate/reload the worker (and reload dashboards)
@@ -60,9 +53,13 @@ def display_page(pathname):
     
     # show links to each dashboard
     else:
+        logger.log(logging.INFO, "Loading dashboard list")
         return html.Div([
-            dcc.Link(dashboard, href=f"/dashboards/{dashboard}") for dashboard in available_dashboards
+            dcc.Link(dashboard, href=f"/{DASH_FILES}/{dashboard}") for dashboard in available_dashboards
         ], className="dashLinks")
+
+
+logger.log(logging.INFO, f"Report Server ready")
 
 
 if __name__ == '__main__':

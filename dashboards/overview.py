@@ -3,6 +3,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import dash_core_components as dcc
 import dash_html_components as html
+
+from config import API_HOST
 from design import DISCRETE_COLORS, LABELS, apply_figure_style
 
 
@@ -10,8 +12,9 @@ from design import DISCRETE_COLORS, LABELS, apply_figure_style
 title = "311 DATA OVERVIEW"
 
 # DATA
-df = pd.read_json('https://dev-api.311-data.org/reports?field=type_name&field=council_name&field=created_year&filter=created_date>=2016-01-01')
-df['council_name'] = df['council_name'].str.slice(0,30)  # trim long councils
+query_string = "/reports?field=type_name&field=council_name&field=created_year&filter=created_date>=2016-01-01"
+df = pd.read_json(API_HOST + query_string)
+df['council_name'] = df['council_name'].str.slice(0,30)  # trim long council names
 
 # FIGURES
 # council figure

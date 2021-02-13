@@ -6,6 +6,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
+from config import API_HOST
 
 
 pretty_columns = {
@@ -20,7 +21,9 @@ pretty_columns = {
 title = "NEIGHBORHOOD RECENT DATA"
 
 # DATA
-df = pd.read_json('https://dev-api.311-data.org/requests/updated')
+query_string = '/requests/updated'
+df = pd.read_json(API_HOST + query_string)
+
 table_df = df.query(f"councilName == 'Arleta'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'address']]
 
 

@@ -3,15 +3,18 @@ import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from design import DISCRETE_COLORS, LABELS, apply_figure_style
+
 from app import app
+from design import DISCRETE_COLORS, LABELS, apply_figure_style
+from config import API_HOST
 
 
 # TITLE
 title = "NEIGHBORHOODS"
 
 # DATA
-df = pd.read_json('https://dev-api.311-data.org/reports?field=type_name&field=council_name&field=created_date')
+query_string = '/reports?field=type_name&field=council_name&field=created_date'
+df = pd.read_json(API_HOST + query_string)
 
 fig = px.line()
 apply_figure_style(fig)

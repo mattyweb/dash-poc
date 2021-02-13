@@ -1,9 +1,12 @@
 import datetime
+
 import pandas as pd
 import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
+
 from design import DISCRETE_COLORS, LABELS, apply_figure_style
+from config import API_HOST
 
 
 # TITLE
@@ -12,7 +15,9 @@ title = "RECENT 311 REQUESTS"
 # DATA
 start_date = datetime.date.today() - datetime.timedelta(days=14)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
-df = pd.read_json(f"https://dev-api.311-data.org/reports?filter=created_date>={start_date}&filter=created_date<={end_date}")
+
+query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"
+df = pd.read_json(API_HOST + query_string)
 
 #FIGURES
 report_df = df.groupby(['created_date', 'type_name']).agg('sum').reset_index()
