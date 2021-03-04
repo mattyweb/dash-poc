@@ -13,8 +13,10 @@ from config import API_HOST
 title = "NEIGHBORHOODS"
 
 # DATA
+print(" * Downloading data for dataframe")
 query_string = '/reports?field=type_name&field=council_name&field=created_date'
 df = pd.read_json(API_HOST + query_string)
+print(" * Dataframe has been loaded")
 
 fig = px.line()
 apply_figure_style(fig)

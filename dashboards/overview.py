@@ -11,14 +11,12 @@ from design import DISCRETE_COLORS, LABELS, apply_figure_style
 # TITLE
 title = "311 DATA OVERVIEW"
 
-# DATA
-query_string = "/reports?field=type_name&field=council_name&field=created_year&filter=created_date>=2016-01-01"
-df = pd.read_json(API_HOST + query_string)
-df['council_name'] = df['council_name'].str.slice(0,30)  # trim long council names
-
 # FIGURES
 # council figure
-df1 = df.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
+print(" * Downloading data for dataframe")
+query_string = "/reports?field=council_name&filter=created_date>=2016-01-01"
+df1 = pd.read_json(API_HOST + query_string)
+df1 = df1.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
 fig1 = px.bar(
     df1,
     x=df1.index,
@@ -28,7 +26,10 @@ fig1 = px.bar(
 )
 
 # year totals figure
-df2 = df.groupby(['created_year'])['counts'].sum().to_frame()
+print(" * Downloading data for dataframe")
+query_string = "/reports?field=created_year&filter=created_date>=2016-01-01"
+df2 = pd.read_json(API_HOST + query_string)
+df2 = df2.groupby(['created_year'])['counts'].sum().to_frame()
 fig2 = px.bar(
     df2,
     x=df2.index,
@@ -38,7 +39,10 @@ fig2 = px.bar(
 )
 
 # types figure
-df3 = df.groupby(['type_name'])['counts'].sum().to_frame()
+print(" * Downloading data for dataframe")
+query_string = "/reports?field=type_name&filter=created_date>=2016-01-01"
+df3 = pd.read_json(API_HOST + query_string)
+df3 = df3.groupby(['type_name'])['counts'].sum().to_frame()
 fig3 = px.pie(
     df3,
     names=df3.index,
@@ -48,7 +52,7 @@ fig3 = px.pie(
 )
 
 
-stas_df = pd.read_json('https://dev-api.311-data.org/types/stats')
+stas_df = pd.read_json(API_HOST + '/types/stats')
 stas_df = stas_df.sort_values('median', ascending=False)
 
 fig4 = go.Figure()
@@ -79,9 +83,9 @@ apply_figure_style(fig4)
 layout = html.Div([
     html.H1(title),
     html.Div([
-        html.Div([html.H2(f"{df['counts'].sum():,}"), html.Label("Total Requests")], className="dataLabel"),
-        html.Div([html.H2(f"{len(pd.unique(df['council_name']))}"), html.Label("Neighborhoods")], className="dataLabel"),
-        html.Div([html.H2(f"{len(pd.unique(df['type_name']))}"), html.Label("Request Types")], className="dataLabel"),
+        html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label("Total Requests")], className="dataLabel"),
+        html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")], className="dataLabel"),
+        html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], className="dataLabel"),
     ], className="row"),
     html.Div([
         html.Div(dcc.Graph(id='graph2', figure=fig2), style={'display': 'inline-block', 'width': '50%'}),

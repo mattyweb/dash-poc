@@ -16,12 +16,18 @@ DISCRETE_COLORS = [
 LABELS = {
     "created_year": "Year",
     "created_month": "Month",
-    "created_date": "Date Reported",
+    "created_date": "Date Requested",
+    "createdDate": "Date Requested",
     "council_name": "Neighborhood",
+    "councilName": "Neighborhood",
     "type_name": "Request Type",
-    "day_of_week": "Day of Week Reported",
+    "typeName": "Request Type",
+    'agencyName': "Agency Name", 
+    'sourceName': "Source Name", 
+    "day_of_week": "Day of Week Requested",
     "counts": "Total Requests",
     "value": "Total Requests",
+    "srnumber": "Total Requests",
 }
 
 def apply_figure_style(fig):

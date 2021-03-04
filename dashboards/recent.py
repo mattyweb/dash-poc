@@ -13,11 +13,13 @@ from config import API_HOST
 title = "RECENT 311 REQUESTS"
 
 # DATA
-start_date = datetime.date.today() - datetime.timedelta(days=14)
+start_date = datetime.date.today() - datetime.timedelta(days=15)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
 
 query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"
+print(" * Downloading data for dataframe")
 df = pd.read_json(API_HOST + query_string)
+print(" * Dataframe has been loaded")
 
 #FIGURES
 report_df = df.groupby(['created_date', 'type_name']).agg('sum').reset_index()
