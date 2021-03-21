@@ -1,3 +1,4 @@
+import textwrap
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -5,7 +6,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from config import API_HOST
-from design import DISCRETE_COLORS, LABELS, apply_figure_style
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 
 
 # TITLE
@@ -44,9 +45,11 @@ query_string = "/reports?field=agency_name&filter=created_date>=2016-01-01"
 df5 = pd.read_json(API_HOST + query_string)
 df5 = df5.groupby(['agency_name'])['counts'].sum().to_frame()
 df5.sort_values('counts', ascending=False, inplace=True)
-df5.loc['Others'] = df5[5:].sum()
+df5.loc['Others'] = df5[4:].sum()
 df5.sort_values('counts', ascending=False, inplace=True)
-df5 = df5[:6]
+df5 = df5[:5]
+df5.index = df5.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
+
 fig5 = px.pie(
     df5,
     names=df5.index,
@@ -61,9 +64,9 @@ query_string = "/reports?field=source_name&filter=created_date>=2016-01-01"
 df6 = pd.read_json(API_HOST + query_string)
 df6 = df6.groupby(['source_name'])['counts'].sum().to_frame()
 df6.sort_values('counts', ascending=False, inplace=True)
-df6.loc['Others'] = df6[5:].sum()
+df6.loc['Others'] = df6[4:].sum()
 df6.sort_values('counts', ascending=False, inplace=True)
-df6 = df6[:6]
+df6 = df6[:5]
 fig6 = px.bar(
     df6,
     x=df6.index,
@@ -84,6 +87,7 @@ print(" * Downloading data for dataframe")
 query_string = "/reports?field=type_name&filter=created_date>=2016-01-01"
 df3 = pd.read_json(API_HOST + query_string)
 df3 = df3.groupby(['type_name'])['counts'].sum().to_frame()
+df3.index = df3.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 fig3 = px.pie(
     df3,
     names=df3.index,
@@ -91,6 +95,7 @@ fig3 = px.pie(
     color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
 )
+# fig3.update_layout(showlegend=False)
 
 stas_df = pd.read_json(API_HOST + '/types/stats')
 stas_df = stas_df.sort_values('median', ascending=False)
@@ -125,18 +130,50 @@ apply_figure_style(fig6)
 layout = html.Div([
     html.H1(title),
     html.Div([
-        html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label("Total Requests")], className="dataLabel"),
-        html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")], className="dataLabel"),
-        html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], className="dataLabel"),
-    ], className="row"),
+        html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label("Total Requests")], className="stats-label"),
+        html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")], className="stats-label"),
+        html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], className="stats-label"),
+    ], className="graph-row"),
     html.Div([
-        html.Div(dcc.Graph(id='graph2', figure=fig2), style={'display': 'inline-block', 'width': '50%'}),
-        html.Div(dcc.Graph(id='graph3', figure=fig3), style={'display': 'inline-block', 'width': '50%'}),
-    ]),
-    dcc.Graph(id='graph4', figure=fig4),
+        dcc.Graph(
+            id='graph2',
+            figure=fig2,
+            config=CONFIG_OPTIONS,
+            className="half-graph"
+        ),
+        dcc.Graph(
+            id='graph3',
+            figure=fig3,
+            config=CONFIG_OPTIONS,
+            className="half-graph"
+        )],
+        className="graph-row"),
+    dcc.Graph(
+        id='graph4',
+        figure=fig4,
+        config=CONFIG_OPTIONS,
+        responsive=True,        
+    ),
     html.Div([
-        html.Div(dcc.Graph(id='graph5', figure=fig5), style={'display': 'inline-block', 'width': '50%'}),
-        html.Div(dcc.Graph(id='graph6', figure=fig6), style={'display': 'inline-block', 'width': '50%'}),
-    ]),
-    dcc.Graph(id='graph1', figure=fig1),
+        dcc.Graph(
+            id='graph5',
+            figure=fig5,
+            config=CONFIG_OPTIONS,
+            className="half-graph",
+            responsive=True,
+        ),
+        dcc.Graph(
+            id='graph6',
+            figure=fig6,
+            config=CONFIG_OPTIONS,
+            className="half-graph",
+            responsive=True,
+        )],
+        className="graph-row"),
+    dcc.Graph(
+        id='graph1',
+        figure=fig1,
+        config=CONFIG_OPTIONS,
+        responsive=True,
+    ),
 ])

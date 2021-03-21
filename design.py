@@ -32,6 +32,21 @@ LABELS = {
     "srnumber": "Total Requests",
 }
 
+CONFIG_OPTIONS = {
+    'modeBarButtonsToRemove': [
+        'lasso2d', 
+        'toggleHover',
+        'toggleSpikelines',
+        'pan2d,'
+        'select2d',
+        'hoverClosestCartesian',
+        'hoverCompareCartesian',
+        'resetScale2d',
+    ],
+    'displaylogo': False,
+}
+
+
 def apply_figure_style(fig):
 
     fig.update_layout(
@@ -42,6 +57,19 @@ def apply_figure_style(fig):
         font_family="Roboto, Arial",
         font_color="#ECECEC",
         colorway=DISCRETE_COLORS,
+        margin_l=10,
+        margin_r=10,
+        legend_font_size=11,
+        legend_title_text='',
+        legend=dict(
+            yanchor="auto",
+            valign='top',
+            # orientation="h",
+            # x=-1
+            # y=1.02,
+            # xanchor="right",
+            # x=1
+        )
     )
 
     fig.update_xaxes(

@@ -1,3 +1,4 @@
+import textwrap
 import pandas as pd
 import plotly.express as px
 import dash_core_components as dcc
@@ -5,7 +6,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from design import DISCRETE_COLORS, LABELS, apply_figure_style
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 from config import API_HOST
 
 
@@ -72,6 +73,7 @@ def update_figure(selected_council):
 def update_figure(selected_council):
     
     report_df = df[df.council_name == selected_council].groupby(['created_date', 'type_name']).agg('sum').reset_index()
+    report_df.type_name = report_df.type_name.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 
     fig = px.line(report_df,
                   x="created_date", 
@@ -105,10 +107,12 @@ layout = html.Div([
     ),
     dcc.Graph(
         id='graph1',
-        figure=fig
+        figure=fig, 
+        config=CONFIG_OPTIONS
     ),
     dcc.Graph(
         id='graph2',
-        figure=fig
+        figure=fig, 
+        config=CONFIG_OPTIONS
     )
 ])

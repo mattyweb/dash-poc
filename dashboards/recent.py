@@ -5,7 +5,7 @@ import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
 
-from design import DISCRETE_COLORS, LABELS, apply_figure_style
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 from config import API_HOST
 
 
@@ -20,9 +20,11 @@ query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<
 print(" * Downloading data for dataframe")
 df = pd.read_json(API_HOST + query_string)
 print(" * Dataframe has been loaded")
+import textwrap
 
 #FIGURES
 report_df = df.groupby(['created_date', 'type_name']).agg('sum').reset_index()
+report_df.type_name = report_df.type_name.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 fig = px.line(report_df,
               x="created_date", 
               y="counts",
@@ -67,11 +69,13 @@ apply_figure_style(dow_fig)
 layout = html.Div([
     html.H1(title),
     html.Div([
-        html.Div([html.H2(f"{report_df['counts'].sum():,}"), html.Label("Total Requests")], className="dataLabel"),
-        html.Div([html.H2(f"{start_date.strftime('%b %d')}"), html.Label("Report Start Date")], className="dataLabel"),
-        html.Div([html.H2(f"{end_date.strftime('%b %d')}"), html.Label("Report End Date")], className="dataLabel"),
-    ], className="row"),
-    dcc.Graph(id='graph', figure=fig),
-    dcc.Graph(id='graph3', figure=dow_fig, className="halfGraph"),
-    dcc.Graph(id='graph2', figure=pie_fig, className="halfGraph"),
+        html.Div([html.H2(f"{report_df['counts'].sum():,}"), html.Label("Total Requests")], className="stats-label"),
+        html.Div([html.H2(f"{start_date.strftime('%b %d')}"), html.Label("Report Start Date")], className="stats-label"),
+        html.Div([html.H2(f"{end_date.strftime('%b %d')}"), html.Label("Report End Date")], className="stats-label"),
+    ], className="graph-row"),
+    dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
+    html.Div([
+        dcc.Graph(id='graph3', figure=dow_fig, config=CONFIG_OPTIONS, className="half-graph"),
+        dcc.Graph(id='graph2', figure=pie_fig, config=CONFIG_OPTIONS, className="half-graph"),
+    ], className="graph-row"),
 ])

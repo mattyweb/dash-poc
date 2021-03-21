@@ -50,6 +50,7 @@ def display_page(pathname):
     elif last_part == 'reload':
         logger.log(logging.WARNING, "Report Server reload requested")
         os.kill(os.getpid(), signal.SIGTERM)
+        return html.Div('Reloading')
     
     # show links to each dashboard
     else:

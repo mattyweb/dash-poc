@@ -1,4 +1,5 @@
 import datetime
+import textwrap
 from os import error
 import pandas as pd
 
@@ -11,7 +12,7 @@ from flask import request
 
 from app import app, batch_get_data
 from config import API_HOST
-from design import DISCRETE_COLORS, LABELS, apply_figure_style
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 
 
 pretty_columns = {
@@ -104,27 +105,27 @@ layout = html.Div([
     html.Div([
         html.Div(
             [html.H2(id="created_txt"), html.Label("New Requests")],
-            className="dataLabel"
+            className="stats-label"
         ),
         html.Div(
             [html.H2(id="closed_txt"), html.Label("Closed Requests")],
-            className="dataLabel"
+            className="stats-label"
         ),
         html.Div(
             [html.H2(id="net_txt"), html.Label("Net Change")],
-            className="dataLabel"
+            className="stats-label"
         ),
-    ], className="row"),
+    ], className="graph-row"),
     html.Div([
         html.Div(    
-            dcc.Graph(id='graph', figure=fig),
-            className="halfGraph"
+            dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
+            className="half-graph"
         ),
         html.Div(    
-            dcc.Graph(id='pie_graph', figure=pie_fig),
-            className="halfGraph"
+            dcc.Graph(id='pie_graph', figure=pie_fig, config=CONFIG_OPTIONS),
+            className="half-graph"
         )        
-    ]),
+    ], ),
     html.Div(    
         dash_table.DataTable(        
             id='council_table',
@@ -180,6 +181,8 @@ def update_text(selected_council):
 )
 def update_figure(selected_council):
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()
+    figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
+
     fig = px.line(
         figure_df,
         x="createdDate", 
@@ -207,6 +210,7 @@ def update_figure(selected_council):
 )
 def update_figure(selected_council):
     pie_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['typeName']).agg('count').reset_index()
+    
     pie_fig = px.pie(pie_df,
               names="typeName", 
               values="srnumber",
