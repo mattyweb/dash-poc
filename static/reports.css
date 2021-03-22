@@ -14,9 +14,12 @@ h1 {
     margin: 20pt;
     color: #0F181F;
 }
-dash-links a {
+.dash-links a {
     color: white;
     padding: 5px;
+}
+._dash-loading {
+    display: none;
 }
 .stats-label {
     padding: 10px;
