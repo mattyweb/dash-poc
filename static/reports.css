@@ -21,6 +21,9 @@ h1 {
 ._dash-loading {
     display: none;
 }
+._dash-reloading {
+    color: yellow;
+}
 .stats-label {
     padding: 10px;
     margin: 20px;
